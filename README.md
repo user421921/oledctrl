@@ -1,6 +1,6 @@
 # OLED Display Script for Raspberry Pi
 
-## A Python script to display multi-line text on an I2C OLED screen using the Luma.OLED library. Supports text positioning, custom display time, and an indefinite run mode.
+## A Python script to display multi-line text on an I2C OLED screen using the "Luma.OLED" library. Supports text positioning, custom display time, and an indefinite run mode.
 
 Features
 
