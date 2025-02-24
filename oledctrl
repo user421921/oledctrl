@@ -1,0 +1,76 @@
+#!/bin/python3
+from time import sleep
+from luma.oled.device import ssd1306
+from luma.core.interface.serial import i2c
+from luma.core.render import canvas
+from PIL import ImageFont
+import sys
+
+# Display settings
+WIDTH = 128
+HEIGHT = 64
+LINE_SPACING = 2  # Space between lines
+
+def display_text(device, message, position):
+    """Handles rendering multi-line text on the OLED screen."""
+    font = ImageFont.load_default()
+    text_lines = message.split("\n")  # Split text by newline character
+    text_height = font.getsize("A")[1]  # Get height of a single character line
+
+    with canvas(device) as draw:
+        y = position[1]  # Start y-position
+        for line in text_lines:
+            draw.text((position[0], y), line, fill="white", font=font)
+            y += text_height + LINE_SPACING  # Move down for next line
+
+def main():
+    message = "Line 1\nLine 2\nLine 3"
+    position = (0, 0)
+    display_time = 15  # Default display duration
+    run_forever = False
+
+    # Parse command-line arguments
+    args = sys.argv[1:]
+    i = 0
+    while i < len(args):
+        if args[i] == '-M' and i + 1 < len(args):
+            message = args[i + 1].replace("\\n", "\n")  # Support escaped \n in CLI
+            i += 1
+        elif args[i] == '-P' and i + 1 < len(args):
+            try:
+                x, y = map(int, args[i + 1].split(','))
+                position = (x, y)
+            except ValueError:
+                print("Error: Position must be in 'x,y' format.")
+                sys.exit(1)
+            i += 1
+        elif args[i] == '-T' and i + 1 < len(args):
+            try:
+                display_time = int(args[i + 1])
+            except ValueError:
+                print("Error: Time must be an integer representing seconds.")
+                sys.exit(1)
+            i += 1
+        elif args[i] == '-I':  # Indefinite mode
+            run_forever = True
+        i += 1
+
+    # Initialize OLED
+    serial = i2c(port=1, address=0x3C)
+    device = ssd1306(serial)
+
+    try:
+        if run_forever:
+            print("Running indefinitely... Press Ctrl + C to stop.")
+            while True:
+                display_text(device, message, position)
+                sleep(1)  # Refresh every second (adjust as needed)
+        else:
+            display_text(device, message, position)
+            sleep(display_time)  # Sleep for specified time
+
+    except KeyboardInterrupt:
+        print("\nExiting...")
+
+if __name__ == '__main__':
+    main()
