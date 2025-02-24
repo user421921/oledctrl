@@ -66,14 +66,12 @@ Argument     Description
 -T seconds   Sets the display duration (default: 15s)
 -I           Runs indefinitely until Ctrl + C is pressed
 
-Example Output
-
+Example Output:
+```
 Hello
 World
-
-Troubleshooting
-
-Check I2C Address
+```
+Troubleshooting: Check I2C Address, 
 
 Run the following to detect your OLED display:
 
@@ -106,4 +104,4 @@ This project is licensed under the MIT License.
 
 Credits
 
-Developed by [Your Name]. Contributions & suggestions welcome!
+Developed by user421921 AKA D3DM4N. Contributions & suggestions welcome!
