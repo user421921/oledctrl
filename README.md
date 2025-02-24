@@ -35,7 +35,7 @@ Enable I2C on your Pi using:
 
 Navigate to Interfacing Options → I2C → Enable.
 
-Usage
+# Usage
 
 Basic Command
 
